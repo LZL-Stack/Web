@@ -36,7 +36,7 @@ export function getVideo(id) {
   return db.videos.find(v => v.id === id) || null;
 }
 
-export function createVideo({ title, description, filename, originalName, mimeType, size }) {
+export function createVideo({ title, description, filename, originalName, mimeType, size, section }) {
   const db = readDB();
   const video = {
     id: db.nextId++,
@@ -46,6 +46,7 @@ export function createVideo({ title, description, filename, originalName, mimeTy
     originalName,
     mimeType: mimeType || 'video/mp4',
     size: size || 0,
+    section: section || 'latest',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };

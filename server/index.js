@@ -134,7 +134,7 @@ router.post('/api/admin/videos', requireAdmin, async (ctx) => {
     return;
   }
 
-  const { title, description } = ctx.request.body || {};
+  const { title, description, section } = ctx.request.body || {};
   if (!title) {
     ctx.status = 400;
     ctx.body = { success: false, message: '请输入视频标题' };
@@ -144,6 +144,7 @@ router.post('/api/admin/videos', requireAdmin, async (ctx) => {
   const video = createVideo({
     title,
     description: description || '',
+    section: section || 'latest',
     filename: path.basename(file.filepath),
     originalName: file.originalFilename,
     mimeType: file.mimetype || 'video/mp4',

@@ -29,6 +29,17 @@
         placeholder="视频描述（选填）"
         class="input"
       />
+      <div class="section-selector">
+        <span class="section-label">投放区域：</span>
+        <label :class="['section-option', { active: uploadSection === 'hot' }]">
+          <input type="radio" v-model="uploadSection" value="hot" />
+          🔥 热门推荐
+        </label>
+        <label :class="['section-option', { active: uploadSection === 'latest' }]">
+          <input type="radio" v-model="uploadSection" value="latest" />
+          ✦ 最新更新
+        </label>
+      </div>
       <div class="upload-actions">
         <button @click="confirmUpload" :disabled="!uploadTitle || !selectedFile" class="btn">
           确认上传
@@ -50,6 +61,7 @@
         <tr>
           <th>ID</th>
           <th>标题</th>
+          <th>区域</th>
           <th>大小</th>
           <th>上传时间</th>
           <th>操作</th>
@@ -62,6 +74,11 @@
             <router-link :to="`/video/${video.id}`" class="video-link">
               {{ video.title }}
             </router-link>
+          </td>
+          <td>
+            <span :class="['section-tag', video.section === 'hot' ? 'tag-hot' : 'tag-latest']">
+              {{ video.section === 'hot' ? '🔥 热门' : '✦ 最新' }}
+            </span>
           </td>
           <td>{{ formatSize(video.size) }}</td>
           <td>{{ formatDate(video.createdAt) }}</td>
@@ -93,6 +110,7 @@ export default {
     const selectedFile = ref(null)
     const uploadTitle = ref('')
     const uploadDesc = ref('')
+    const uploadSection = ref('hot')
     const uploading = ref(false)
     const uploadError = ref('')
 
@@ -100,7 +118,7 @@ export default {
     const token = localStorage.getItem('admin_token')
     if (!token) {
       router.push('/admin/login')
-      return { videos, loading, showUploadForm, selectedFile, uploadTitle, uploadDesc, uploading, uploadError }
+      return { videos, loading, showUploadForm, selectedFile, uploadTitle, uploadDesc, uploadSection, uploading, uploadError }
     }
 
     async function loadVideos() {
@@ -133,6 +151,7 @@ export default {
       selectedFile.value = null
       uploadTitle.value = ''
       uploadDesc.value = ''
+      uploadSection.value = 'hot'
       uploadError.value = ''
     }
 
@@ -146,6 +165,7 @@ export default {
       formData.append('file', selectedFile.value)
       formData.append('title', uploadTitle.value)
       formData.append('description', uploadDesc.value)
+      formData.append('section', uploadSection.value)
 
       try {
         await uploadVideo(formData)
@@ -187,7 +207,7 @@ export default {
 
     return {
       videos, loading,
-      showUploadForm, selectedFile, uploadTitle, uploadDesc, uploading, uploadError,
+      showUploadForm, selectedFile, uploadTitle, uploadDesc, uploadSection, uploading, uploadError,
       handleUpload, cancelUpload, confirmUpload, handleDelete, logout,
       formatSize, formatDate
     }
@@ -298,6 +318,53 @@ export default {
   color: #e74c3c;
   font-size: 14px;
 }
+
+/* Section Selector */
+.section-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-label {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.section-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 2px solid #eee;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  background: #fafafa;
+}
+.section-option input { display: none; }
+.section-option.active {
+  border-color: #7b2d8e;
+  background: rgba(123,45,142,0.06);
+  color: #7b2d8e;
+}
+.section-option:hover {
+  border-color: #b088d6;
+}
+.section-option:first-child.active { border-color: #e74c3c; background: rgba(231,76,60,0.06); color: #e74c3c; }
+.section-option:last-child.active { border-color: #7b2d8e; background: rgba(123,45,142,0.06); color: #7b2d8e; }
+
+/* Section Tag */
+.section-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.tag-hot { background: rgba(231,76,60,0.1); color: #e74c3c; }
+.tag-latest { background: rgba(123,45,142,0.1); color: #7b2d8e; }
 
 .loading, .empty {
   text-align: center;

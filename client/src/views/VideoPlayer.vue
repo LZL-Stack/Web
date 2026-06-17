@@ -65,11 +65,19 @@ export default {
 </script>
 
 <style scoped>
+.player-page {
+  position: relative;
+  z-index: 1;
+  margin-top: 40px;
+}
+
 .video-container {
   background: #000;
-  border-radius: 10px;
+  border-radius: 14px;
   overflow: hidden;
   margin-bottom: 24px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
 .video-player {
@@ -78,14 +86,19 @@ export default {
   display: block;
 }
 
+.video-details {
+  padding: 4px 0;
+}
+
 .video-details h1 {
   font-size: 24px;
   font-weight: 700;
   margin-bottom: 8px;
+  color: #e8e0f0;
 }
 
 .meta {
-  color: #888;
+  color: rgba(255,255,255,0.4);
   font-size: 14px;
   line-height: 1.8;
 }
@@ -93,7 +106,7 @@ export default {
 .loading {
   text-align: center;
   padding: 80px 0;
-  color: #888;
+  color: rgba(255,255,255,0.4);
   font-size: 16px;
 }
 </style>

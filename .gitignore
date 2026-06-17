@@ -10,10 +10,6 @@ yarn.lock
 server/uploads/*
 !server/uploads/.gitkeep
 
-# 服务器数据（JSON 数据库）
-server/data/*
-!server/data/.gitkeep
-
 # 构建输出
 server/public/*
 !server/public/.gitkeep
